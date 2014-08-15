@@ -12,10 +12,11 @@ package org.braincopy.silbala;
  * </ol>
  * 
  * @author Hiroaki Tateshita
+ * @version 0.0.1
  * 
  */
 public class Point {
-	float x, y, z;
+	public float x, y, z;
 
 	public Point() {
 		// TODO Auto-generated constructor stub

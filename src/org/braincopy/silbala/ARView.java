@@ -9,6 +9,7 @@ import android.view.View;
 /**
  * 
  * @author Hiroaki Tateshita
+ * @version 0.0.6
  * 
  */
 public class ARView extends View {
@@ -30,8 +31,10 @@ public class ARView extends View {
 	 * 
 	 */
 	private static final float DISTANCE = 1350f;
-	public Paint paint;
-	// float lat, lon;
+
+	protected float lat, lon;
+
+	protected Paint paint;
 
 	/**
 	 * canvas size
@@ -41,33 +44,34 @@ public class ARView extends View {
 	/**
 	 * [degree]
 	 */
-	float direction;
+	protected float direction;
 
 	/**
 	 * [degree]
 	 */
-	float pitch;
+	protected float pitch;
 
 	/**
 	 * [degree]
 	 */
-	float roll;
-
-	/**
-	 * vertical view angle [degree]
-	 */
-	final float vVeiwAngle = 30.0f;
-
-	/**
-	 * horizontal view angle [degree]
-	 */
-	final float hVeiwAngle = 25.0f;
+	protected float roll;
 
 	private String statusString = "connecting...";
 
+	/**
+	 * 
+	 */
 	private Plane screenPlane;
-	private Line line;
-	private Point point;
+
+	/**
+	 * temporary line object
+	 */
+	protected Line line;
+
+	/**
+	 * temporary Point object
+	 */
+	protected Point point;
 
 	public ARView(Context context) {
 		super(context);
@@ -91,10 +95,8 @@ public class ARView extends View {
 		canvas.drawText("Direction: " + direction, 50, 50, paint);
 		canvas.drawText("Pitch: " + pitch, 50, 100, paint);
 		canvas.drawText("Roll: " + roll, 50, 150, paint);
-		// canvas.drawText("Lat: " + lat, 50, 200, paint);
-		// canvas.drawText("Lon: " + lon, 50, 250, paint);
-
-		drawAzElLines(canvas, paint, 8);
+		canvas.drawText("Lat: " + lat, 50, 200, paint);
+		canvas.drawText("Lon: " + lon, 50, 250, paint);
 
 		drawDirection(canvas, paint);
 		drawStatus(canvas, paint);
@@ -198,8 +200,8 @@ public class ARView extends View {
 		direction = ((float) Math.toDegrees(orientation[0]) + 360) % 360;
 		pitch = (float) Math.toDegrees(orientation[1]);
 		roll = (float) Math.toDegrees(orientation[2]);
-		// lat = lat_;
-		// lon = lon_;
+		this.lat = lat_;
+		this.lon = lon_;
 
 		screenPlane.setParam(
 				(float) (Math.cos(orientation[1]) * Math.sin(orientation[0])),
@@ -220,11 +222,17 @@ public class ARView extends View {
 	 */
 	protected Point convertAzElPoint(float azimuth, float elevation) {
 		Point result = null;
+
+		/*
+		 * create Line object which starts from the original point (0 ,0 ,0) and
+		 * whose directional vector is by input azimuth and elevation.
+		 */
 		float ce = (float) Math.cos(elevation / 180 * Math.PI);
 		float se = (float) Math.sin(elevation / 180 * Math.PI);
 		float ca = (float) Math.cos(azimuth / 180 * Math.PI);
 		float sa = (float) Math.sin(azimuth / 180 * Math.PI);
 		line = new Line(ce * sa, -se, ce * ca);
+
 		point = this.screenPlane.getIntersection(line);
 		if (point != null) {
 			// the order of rotations is important.

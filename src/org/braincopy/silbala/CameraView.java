@@ -11,6 +11,7 @@ import android.view.SurfaceView;
 /**
  * 
  * @author Hiroaki Tateshita
+ * @version 0.0.2
  * 
  */
 public class CameraView extends SurfaceView implements Callback {
@@ -57,11 +58,15 @@ public class CameraView extends SurfaceView implements Callback {
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
-		camera.setPreviewCallback(null);
-		camera.stopPreview();
-		camera.release();
-		camera = null;
-
+		stopPreviewAndFreeCamera();
 	}
 
+	public void stopPreviewAndFreeCamera() {
+		if (camera != null) {
+			camera.setPreviewCallback(null);
+			camera.stopPreview();
+			camera.release();
+			camera = null;
+		}
+	}
 }
