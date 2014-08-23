@@ -10,7 +10,7 @@ import android.view.View;
  * Please extend this class to create your ARView and override onDraw() method.
  * 
  * @author Hiroaki Tateshita
- * @version 0.0.7
+ * @version 0.0.8
  * 
  */
 public class ARView extends View {
@@ -73,6 +73,11 @@ public class ARView extends View {
 	 * temporary Point object
 	 */
 	protected Point point;
+
+	/**
+	 * radius of the earth. [m]
+	 */
+	public static final double RADIUS_OF_EARTH = 6378137.0;
 
 	public ARView(Context context) {
 		super(context);
@@ -211,6 +216,56 @@ public class ARView extends View {
 				DISTANCE);
 
 		invalidate();
+	}
+
+	/**
+	 * 
+	 * @param lat_t
+	 *            latitude of target [deg]
+	 * @param lon_t
+	 *            longitude of target [deg]
+	 * @param alt_t
+	 *            altitude of target
+	 * @return
+	 */
+	protected Point convertLatLonPoint(float lat_t, float lon_t, float alt_t) {
+		Point result = null;
+		/*
+		 * [rad]
+		 */
+		float deltaThetaLat, deltaThetaLon;
+
+		deltaThetaLat = (float) Math.toRadians(this.lat - lat_t);
+		deltaThetaLon = (float) Math.toRadians(this.lon - lon_t);
+
+		/*
+		 * difference between current position (lat, lon) and target position
+		 * (lat_t, lon_t) should be less than 90 degree.
+		 */
+		if (Math.abs(deltaThetaLat) < 0.5 * Math.PI
+				&& Math.abs(deltaThetaLon) < 0.5 * Math.PI) {
+			/*
+			 * [rad]
+			 */
+			float deltaTheta = (float) Math.sqrt(deltaThetaLat * deltaThetaLat
+					+ deltaThetaLon * deltaThetaLon);
+
+			/*
+			 * target should be above horizon.
+			 */
+			if (RADIUS_OF_EARTH / Math.cos(deltaTheta) < RADIUS_OF_EARTH
+					+ alt_t) {
+				float az = (float) Math.toDegrees(Math.atan2(
+						Math.tan(deltaThetaLat), Math.tan(deltaThetaLon)));
+				float el = (float) Math.toDegrees(Math.atan2(
+						(RADIUS_OF_EARTH + alt_t) * Math.cos(deltaTheta)
+								- RADIUS_OF_EARTH, (RADIUS_OF_EARTH + alt_t)
+								* Math.sin(deltaTheta)));
+				result = convertAzElPoint(az, el);
+			}
+		}
+
+		return result;
 	}
 
 	/**

@@ -7,6 +7,12 @@ Usage
 + copy the src folder of the package org.braincopy.silbala to your src folder.
 + create your Activity and ARView class, refering SampleMainActivity and SampleARView.
 
+Functions
+------
++ simple sample AR application for android
++ get x, y on the display of android device from azimuth and elevation information of target.
++ get x, y on the display of android device from latitude, longitude, and altitude of target.
+
 Theory!?
 ------
 ###Coordinates
