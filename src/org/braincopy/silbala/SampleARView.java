@@ -13,6 +13,11 @@ public class SampleARView extends ARView {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		canvas.drawText("Hello", 300, 300, this.paint);
+		drawAzElLines(canvas, paint, 5);
+		point = convertLatLonPoint(lat, lon, 10000f);
+		if (point != null) {
+			canvas.drawText("should be on top", point.x, point.y, paint);
+		}
 	}
 
 }
