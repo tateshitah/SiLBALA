@@ -120,6 +120,45 @@ public class ARView extends View {
 		}
 	}
 
+	/**
+	 * 
+	 * @param canvas
+	 * @param paint
+	 * @param delta
+	 * @param heightOfRoof
+	 * @param numOfLines
+	 */
+	public void drawRoof(Canvas canvas, Paint paint, float delta,
+			float heightOfRoof, int numOfLines) {
+		// create points
+		Point[][] points = new Point[2 * numOfLines + 1][2 * numOfLines + 1];
+		for (int i = 0; i < 2 * numOfLines + 1; i++) {
+			for (int j = 0; j < 2 * numOfLines + 1; j++) {
+				points[i][j] = convertLatLonPoint(lat + delta
+						* (i - numOfLines), lon + delta * (j - numOfLines),
+						heightOfRoof);
+			}
+		}
+
+		// draw points
+		for (int i = 0; i < 2 * numOfLines + 1; i++) {
+			for (int j = 0; j < 2 * numOfLines; j++) {
+				if (points[i][j] != null && points[i][j + 1] != null) {
+					canvas.drawLine(points[i][j].x, points[i][j].y,
+							points[i][j + 1].x, points[i][j + 1].y, paint);
+				}
+			}
+		}
+		for (int i = 0; i < 2 * numOfLines; i++) {
+			for (int j = 0; j < 2 * numOfLines + 1; j++) {
+				if (points[i][j] != null && points[i + 1][j] != null) {
+					canvas.drawLine(points[i][j].x, points[i][j].y,
+							points[i + 1][j].x, points[i + 1][j].y, paint);
+				}
+			}
+		}
+	}
+
 	public void drawAzElLines(Canvas canvas, Paint paint, int numOfLines) {
 
 		// create visible points array
