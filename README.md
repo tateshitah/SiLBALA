@@ -1,4 +1,4 @@
-SiLBALA
+![SiLBALA](https://github.com/tateshitah/SiLBALA/blob/master/SiLBALA.png)
 ======
 SiLBALA: Simple Location Based AR Library for Android
 
