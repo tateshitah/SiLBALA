@@ -10,7 +10,7 @@ import android.view.View;
  * Please extend this class to create your ARView and override onDraw() method.
  * 
  * @author Hiroaki Tateshita
- * @version 0.0.9
+ * @version 0.1.0
  * 
  */
 public class ARView extends View {
@@ -85,7 +85,9 @@ public class ARView extends View {
 		paint.setAntiAlias(true);
 		paint.setColor(Color.RED);
 		paint.setTextSize(20);
+		paint.setStyle(Paint.Style.STROKE);
 		screenPlane = new Plane(0, 0, 0, 0);
+		setDrawingCacheEnabled(true);
 	}
 
 	@Override

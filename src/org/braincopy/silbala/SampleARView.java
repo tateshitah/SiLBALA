@@ -12,13 +12,9 @@ public class SampleARView extends ARView {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		canvas.drawText("Hello", 300, 300, this.paint);
+		canvas.drawText("Hello2", 300, 300, this.paint);
 		// drawAzElLines(canvas, paint, 5);
 		drawRoof(canvas, paint, 0.1f, 10000, 10);
-		point = convertLatLonPoint(lat, lon, 10000f);
-		if (point != null) {
-			canvas.drawText("should be on top", point.x, point.y, paint);
-		}
 	}
 
 }

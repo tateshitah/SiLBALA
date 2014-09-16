@@ -21,9 +21,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageButton;
 
 /**
  * The coordinate system of actual_orientation has been adjusted as follows:
@@ -57,14 +61,33 @@ public class SampleMainActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.fragment_main);
+
+		final CameraCallbackImpl callbackImple = new CameraCallbackImpl();
+		SurfaceView camView = (SurfaceView) findViewById(R.id.cam_view);
+		SurfaceHolder holder = camView.getHolder();
+		// holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		holder.addCallback(callbackImple);
+
+		ImageButton shutterButton = (ImageButton) findViewById(R.id.cameraShutter);
+		shutterButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				callbackImple.takePicture();
+				lat = (float) 20;
+			}
+		});
 
 		arView = new SampleARView(this);
+		callbackImple.setOverlayView(arView);
+		callbackImple.setContentResolver(this.getContentResolver());
 
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		listMag = sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD);
 		listAcc = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
 
-		setContentView(new CameraView(this));
+		// setContentView(new CameraView(this));
 		addContentView(arView, new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.MATCH_PARENT));
 
