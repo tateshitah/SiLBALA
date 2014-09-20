@@ -5,11 +5,17 @@ import java.io.IOException;
 import java.util.List;
 
 import android.content.ContentResolver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera.Size;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -98,6 +104,8 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 		try {
 			Camera.Parameters parameters = mCam.getParameters();
 			parameters.setPreviewSize(mOptimalSize.width, mOptimalSize.height);
+			parameters.setPictureSize(mOptimalSize.width, mOptimalSize.height);
+			
 
 			mCam.setParameters(parameters);
 			mCam.setPreviewDisplay(holder);
@@ -114,6 +122,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 	}
 
 	private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
+
 		final double ASPECT_TOLERANCE = 0.1;
 		double targetRatio = (double) w / h;
 		if (sizes == null)
@@ -145,6 +154,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 				}
 			}
 		}
+		//return sizes.get(0);
 		return optimalSize;
 	}
 
@@ -162,23 +172,34 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 	@Override
 	public void onPictureTaken(byte[] data, Camera camera) {
 		if (data != null) {
-			/*
-			 * Bitmap cameraMap = BitmapFactory.decodeByteArray(data, 0,
-			 * data.length, null); Matrix matrix = new Matrix();
-			 * matrix.setRotate(90); cameraMap = Bitmap.createBitmap(cameraMap,
-			 * 0, 0, cameraMap.getWidth(), cameraMap.getHeight(), matrix, true);
-			 * // オーバーレイイメージ viewから画像を取得。 Bitmap overlayMap =
-			 * overlayView.getDrawingCache(); // 空のイメージを作成 Bitmap offBitmap =
-			 * Bitmap.createBitmap(cameraMap.getWidth(), cameraMap.getHeight(),
-			 * Bitmap.Config.ARGB_8888); Canvas offScreen = new
-			 * Canvas(offBitmap); offScreen .drawBitmap( cameraMap, null, new
-			 * Rect(0, 0, cameraMap.getWidth(), cameraMap .getHeight()), null);
-			 * offScreen .drawBitmap( overlayMap, null, new Rect(0, 0,
-			 * cameraMap.getWidth(), cameraMap .getHeight()), null); //
-			 * 保存　"sample"はファイル名
-			 * MediaStore.Images.Media.insertImage(this.contentResolver,
-			 * offBitmap, "sample", null);
-			 */
+
+			Bitmap cameraMap = BitmapFactory.decodeByteArray(data, 0,
+					data.length, null);
+			Matrix matrix = new Matrix();
+			matrix.setRotate(90);
+			Log.i(TAG, "data.length: "+data.length+", cameraMap h:"+cameraMap.getHeight()+", w:"+cameraMap.getWidth());
+			cameraMap = Bitmap.createBitmap(cameraMap, 0, 0,
+					cameraMap.getWidth(), cameraMap.getHeight(), matrix, true);
+			// 繧ｪ繝ｼ繝舌�繝ｬ繧､繧､繝｡繝ｼ繧ｸ view縺九ｉ逕ｻ蜒上ｒ蜿門ｾ励�
+			Bitmap overlayMap = overlayView.getDrawingCache(); // 遨ｺ縺ｮ繧､繝｡繝ｼ繧ｸ繧剃ｽ懈�
+			Bitmap offBitmap = Bitmap.createBitmap(cameraMap.getWidth(),
+					cameraMap.getHeight(), Bitmap.Config.ARGB_8888);
+			Canvas offScreen = new Canvas(offBitmap);
+			offScreen
+					.drawBitmap(
+							cameraMap,
+							null,
+							new Rect(0, 0, cameraMap.getWidth(), cameraMap
+									.getHeight()), null);
+			offScreen
+					.drawBitmap(
+							overlayMap,
+							null,
+							new Rect(0, 0, cameraMap.getWidth(), cameraMap
+									.getHeight()), null);
+			// 菫晏ｭ倥�"sample"縺ｯ繝輔ぃ繧､繝ｫ蜷�
+			MediaStore.Images.Media.insertImage(this.contentResolver,
+					offBitmap, "sample", null);
 
 			FileOutputStream myFOS = null;
 			try {
