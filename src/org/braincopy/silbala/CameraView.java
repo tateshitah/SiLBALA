@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -39,6 +40,13 @@ public class CameraView extends SurfaceView implements Callback {
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
 		if (camera != null) {
+			camera.stopPreview();
+			try {
+				camera.setPreviewDisplay(arg0);
+			} catch (IOException e) {
+				Log.d("hiro", "Error starting camera preview: " + e.getMessage());
+		           				e.printStackTrace();
+			}
 			camera.startPreview();
 		}
 	}

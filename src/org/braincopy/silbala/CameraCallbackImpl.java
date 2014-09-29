@@ -1,10 +1,12 @@
 package org.braincopy.silbala;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,7 +17,10 @@ import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera.Size;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
+import android.provider.MediaStore.Images.Media;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -25,6 +30,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 
 	private Camera mCam;
 	private List<Size> supportedPreviewSize;
+	private List<Size> supportedPictureSize;
 	private byte[] mFrame;
 	private Size mOptimalSize;
 
@@ -55,6 +61,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 		});
 		Camera.Parameters params = mCam.getParameters();
 		supportedPreviewSize = params.getSupportedPreviewSizes();
+		supportedPictureSize = params.getSupportedPictureSizes();
 
 	}
 
@@ -90,6 +97,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 
 		mOptimalSize = getOptimalPreviewSize(supportedPreviewSize, width,
 				height);
+		Size pictureSize = supportedPictureSize.get(4);
 
 		if (holder.getSurface() == null) {
 			return;
@@ -104,14 +112,14 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 		try {
 			Camera.Parameters parameters = mCam.getParameters();
 			parameters.setPreviewSize(mOptimalSize.width, mOptimalSize.height);
-			parameters.setPictureSize(mOptimalSize.width, mOptimalSize.height);
+			parameters.setPictureSize(pictureSize.width, pictureSize.height);
 			
 
 			mCam.setParameters(parameters);
 			mCam.setPreviewDisplay(holder);
 			mCam.startPreview();
 		} catch (Exception e) {
-			Log.d(TAG,
+			Log.i(TAG,
 					"Error: failed to start camera preview > " + e.getMessage());
 		}
 	}
@@ -154,7 +162,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 				}
 			}
 		}
-		//return sizes.get(0);
+		//return sizes.get(4);
 		return optimalSize;
 	}
 
@@ -165,7 +173,6 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 
 	@Override
 	public void onShutter() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -173,15 +180,53 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 	public void onPictureTaken(byte[] data, Camera camera) {
 		if (data != null) {
 
+			String strFolder;
+			String strFile;
+
+			strFolder = Environment.getExternalStorageDirectory()
+					+ "/DCIM/Camera/";
+
+			strFile = strFolder + "test012.jpg";
+			try {
+				// 撮影画像保存（dataがすでにjpg画像になっているので、これをそのままファイルに落とすだけ）
+				FileOutputStream cFile = new FileOutputStream(strFile);
+				cFile.write(data);
+				cFile.close();
+				long nDate;
+				ContentValues values = new ContentValues();
+
+				nDate = System.currentTimeMillis();
+				values.put(Images.Media.MIME_TYPE, "image/jpeg"); // 必須
+				values.put(Images.Media.DATA, strFile); // 必須：ファイルパス（uriからストリーム作るなら不要）
+				values.put(Images.Media.SIZE, new File(strFile).length()); // 必須：ファイルサイズ（同上）
+				// values.put(Images.Media.TITLE,strFile);
+				// values.put(Images.Media.DISPLAY_NAME,strFile);
+				values.put(Images.Media.DATE_ADDED, nDate);
+				values.put(Images.Media.DATE_TAKEN, nDate);
+				values.put(Images.Media.DATE_MODIFIED, nDate);
+				// values.put(Images.Media.DESCRIPTION,"");
+				// values.put(Images.Media.LATITUDE,0.0);
+				// values.put(Images.Media.LONGITUDE,0.0);
+				// values.put(Images.Media.ORIENTATION,"");
+
+				contentResolver.insert(Media.EXTERNAL_CONTENT_URI, values);
+				}catch(Exception e){
+				Log.i(TAG, ""+e.getMessage());
+			}
+
+			
 			Bitmap cameraMap = BitmapFactory.decodeByteArray(data, 0,
 					data.length, null);
+			MediaStore.Images.Media.insertImage(this.contentResolver,
+					cameraMap, "sample1", "description");
+					/*
 			Matrix matrix = new Matrix();
 			matrix.setRotate(90);
 			Log.i(TAG, "data.length: "+data.length+", cameraMap h:"+cameraMap.getHeight()+", w:"+cameraMap.getWidth());
 			cameraMap = Bitmap.createBitmap(cameraMap, 0, 0,
 					cameraMap.getWidth(), cameraMap.getHeight(), matrix, true);
-			// 繧ｪ繝ｼ繝舌�繝ｬ繧､繧､繝｡繝ｼ繧ｸ view縺九ｉ逕ｻ蜒上ｒ蜿門ｾ励�
-			Bitmap overlayMap = overlayView.getDrawingCache(); // 遨ｺ縺ｮ繧､繝｡繝ｼ繧ｸ繧剃ｽ懈�
+
+			Bitmap overlayMap = overlayView.getDrawingCache();
 			Bitmap offBitmap = Bitmap.createBitmap(cameraMap.getWidth(),
 					cameraMap.getHeight(), Bitmap.Config.ARGB_8888);
 			Canvas offScreen = new Canvas(offBitmap);
@@ -197,18 +242,10 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 							null,
 							new Rect(0, 0, cameraMap.getWidth(), cameraMap
 									.getHeight()), null);
-			// 菫晏ｭ倥�"sample"縺ｯ繝輔ぃ繧､繝ｫ蜷�
-			MediaStore.Images.Media.insertImage(this.contentResolver,
-					offBitmap, "sample", null);
 
-			FileOutputStream myFOS = null;
-			try {
-				myFOS = new FileOutputStream("/sdcard/camera_test.jpg");
-				myFOS.write(data);
-				myFOS.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			MediaStore.Images.Media.insertImage(this.contentResolver,
+					cameraMap, "sample2", "description");
+*/
 
 			camera.startPreview();
 
