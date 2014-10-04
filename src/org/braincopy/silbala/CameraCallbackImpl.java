@@ -97,7 +97,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 
 		mOptimalSize = getOptimalPreviewSize(supportedPreviewSize, width,
 				height);
-		Size pictureSize = supportedPictureSize.get(4);
+		Size pictureSize = supportedPictureSize.get(2);
 
 		if (holder.getSurface() == null) {
 			return;
@@ -113,7 +113,6 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 			Camera.Parameters parameters = mCam.getParameters();
 			parameters.setPreviewSize(mOptimalSize.width, mOptimalSize.height);
 			parameters.setPictureSize(pictureSize.width, pictureSize.height);
-			
 
 			mCam.setParameters(parameters);
 			mCam.setPreviewDisplay(holder);
@@ -162,7 +161,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 				}
 			}
 		}
-		//return sizes.get(4);
+		// return sizes.get(4);
 		return optimalSize;
 	}
 
@@ -186,7 +185,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 			strFolder = Environment.getExternalStorageDirectory()
 					+ "/DCIM/Camera/";
 
-			strFile = strFolder + "test012.jpg";
+			strFile = strFolder + "test013.jpg";
 			try {
 				// 撮影画像保存（dataがすでにjpg画像になっているので、これをそのままファイルに落とすだけ）
 				FileOutputStream cFile = new FileOutputStream(strFile);
@@ -210,25 +209,27 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 				// values.put(Images.Media.ORIENTATION,"");
 
 				contentResolver.insert(Media.EXTERNAL_CONTENT_URI, values);
-				}catch(Exception e){
-				Log.i(TAG, ""+e.getMessage());
+			} catch (Exception e) {
+				Log.i(TAG, "" + e.getMessage());
 			}
 
-			
 			Bitmap cameraMap = BitmapFactory.decodeByteArray(data, 0,
 					data.length, null);
-			MediaStore.Images.Media.insertImage(this.contentResolver,
-					cameraMap, "sample1", "description");
-					/*
+			// MediaStore.Images.Media.insertImage(this.contentResolver,
+			// cameraMap, "sample1", "description");
+
 			Matrix matrix = new Matrix();
 			matrix.setRotate(90);
-			Log.i(TAG, "data.length: "+data.length+", cameraMap h:"+cameraMap.getHeight()+", w:"+cameraMap.getWidth());
+			Log.i(TAG, "data.length: " + data.length + ", cameraMap h:"
+					+ cameraMap.getHeight() + ", w:" + cameraMap.getWidth());
 			cameraMap = Bitmap.createBitmap(cameraMap, 0, 0,
 					cameraMap.getWidth(), cameraMap.getHeight(), matrix, true);
 
 			Bitmap overlayMap = overlayView.getDrawingCache();
 			Bitmap offBitmap = Bitmap.createBitmap(cameraMap.getWidth(),
 					cameraMap.getHeight(), Bitmap.Config.ARGB_8888);
+			offBitmap = Bitmap.createBitmap(offBitmap, 0, 0,
+					offBitmap.getWidth(), offBitmap.getHeight(), matrix, true);
 			Canvas offScreen = new Canvas(offBitmap);
 			offScreen
 					.drawBitmap(
@@ -245,7 +246,6 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 
 			MediaStore.Images.Media.insertImage(this.contentResolver,
 					cameraMap, "sample2", "description");
-*/
 
 			camera.startPreview();
 
