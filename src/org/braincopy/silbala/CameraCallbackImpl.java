@@ -1,9 +1,13 @@
 package org.braincopy.silbala;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -17,10 +21,9 @@ import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera.Size;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
-import android.provider.MediaStore.Images.Media;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -37,6 +40,8 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 	private ARView overlayView;
 
 	private ContentResolver contentResolver;
+
+	static private int MAX_WIDTH_SIZE = 2000;
 
 	public CameraCallbackImpl() {
 		try {
@@ -97,7 +102,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 
 		mOptimalSize = getOptimalPreviewSize(supportedPreviewSize, width,
 				height);
-		Size pictureSize = supportedPictureSize.get(2);
+		Size pictureSize = getOptimalPictureSize(supportedPictureSize);
 
 		if (holder.getSurface() == null) {
 			return;
@@ -165,6 +170,26 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 		return optimalSize;
 	}
 
+	/**
+	 * width should be bigger than height
+	 * 
+	 * @param sizes
+	 * @return
+	 */
+	private Size getOptimalPictureSize(List<Size> sizes) {
+		Size optimalSize = null;
+		int diff = MAX_WIDTH_SIZE;
+		for (Size size : sizes) {
+			if (size.width < MAX_WIDTH_SIZE) {
+				if (diff > MAX_WIDTH_SIZE - size.width) {
+					diff = MAX_WIDTH_SIZE - size.width;
+					optimalSize = size;
+				}
+			}
+		}
+		return optimalSize;
+	}
+
 	public void takePicture() {
 		mCam.takePicture(this, null, this);
 
@@ -180,56 +205,31 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 		if (data != null) {
 
 			String strFolder;
-			String strFile;
 
 			strFolder = Environment.getExternalStorageDirectory()
 					+ "/DCIM/Camera/";
 
-			strFile = strFolder + "test013.jpg";
-			try {
-				// 撮影画像保存（dataがすでにjpg画像になっているので、これをそのままファイルに落とすだけ）
-				FileOutputStream cFile = new FileOutputStream(strFile);
-				cFile.write(data);
-				cFile.close();
-				long nDate;
-				ContentValues values = new ContentValues();
-
-				nDate = System.currentTimeMillis();
-				values.put(Images.Media.MIME_TYPE, "image/jpeg"); // 必須
-				values.put(Images.Media.DATA, strFile); // 必須：ファイルパス（uriからストリーム作るなら不要）
-				values.put(Images.Media.SIZE, new File(strFile).length()); // 必須：ファイルサイズ（同上）
-				// values.put(Images.Media.TITLE,strFile);
-				// values.put(Images.Media.DISPLAY_NAME,strFile);
-				values.put(Images.Media.DATE_ADDED, nDate);
-				values.put(Images.Media.DATE_TAKEN, nDate);
-				values.put(Images.Media.DATE_MODIFIED, nDate);
-				// values.put(Images.Media.DESCRIPTION,"");
-				// values.put(Images.Media.LATITUDE,0.0);
-				// values.put(Images.Media.LONGITUDE,0.0);
-				// values.put(Images.Media.ORIENTATION,"");
-
-				contentResolver.insert(Media.EXTERNAL_CONTENT_URI, values);
-			} catch (Exception e) {
-				Log.i(TAG, "" + e.getMessage());
-			}
-
 			Bitmap cameraMap = BitmapFactory.decodeByteArray(data, 0,
 					data.length, null);
-			// MediaStore.Images.Media.insertImage(this.contentResolver,
-			// cameraMap, "sample1", "description");
 
 			Matrix matrix = new Matrix();
 			matrix.setRotate(90);
-			Log.i(TAG, "data.length: " + data.length + ", cameraMap h:"
-					+ cameraMap.getHeight() + ", w:" + cameraMap.getWidth());
 			cameraMap = Bitmap.createBitmap(cameraMap, 0, 0,
 					cameraMap.getWidth(), cameraMap.getHeight(), matrix, true);
 
 			Bitmap overlayMap = overlayView.getDrawingCache();
 			Bitmap offBitmap = Bitmap.createBitmap(cameraMap.getWidth(),
 					cameraMap.getHeight(), Bitmap.Config.ARGB_8888);
-			offBitmap = Bitmap.createBitmap(offBitmap, 0, 0,
-					offBitmap.getWidth(), offBitmap.getHeight(), matrix, true);
+			// offBitmap = Bitmap.createBitmap(offBitmap, 0, 0,
+			// offBitmap.getWidth(), offBitmap.getHeight(), matrix, true);
+			Log.i(TAG,
+					"data.length: " + data.length + ", cameraMap h:"
+							+ cameraMap.getHeight() + ", w:"
+							+ cameraMap.getWidth() + ", overLayMap h:"
+							+ overlayMap.getHeight() + ", w:"
+							+ overlayMap.getWidth() + ", offBitmap h:"
+							+ offBitmap.getHeight() + ", w:"
+							+ offBitmap.getWidth());
 			Canvas offScreen = new Canvas(offBitmap);
 			offScreen
 					.drawBitmap(
@@ -244,9 +244,39 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 							new Rect(0, 0, cameraMap.getWidth(), cameraMap
 									.getHeight()), null);
 
-			MediaStore.Images.Media.insertImage(this.contentResolver,
-					cameraMap, "sample2", "description");
+			Bitmap bitmap = offBitmap;
+			FileOutputStream fos = null;
 
+			Date today = new Date();
+			SimpleDateFormat sdFormat = new SimpleDateFormat(
+					"yyyy_MM_dd_hh_mm_ss_SSS", Locale.JAPAN);
+			String fileName = sdFormat.format(today) + ".jpg";
+
+			File file = new File(strFolder + fileName);
+			try {
+				if (file.createNewFile()) {
+					fos = new FileOutputStream(file);
+					bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+					fos.close();
+				}
+			} catch (FileNotFoundException e) {
+				Log.e(TAG, e.getMessage());
+			} catch (IOException e) {
+				Log.e(TAG, e.getMessage());
+			}
+
+			Uri uri = Uri.fromFile(file);
+			ContentValues values = new ContentValues();
+			values.put(MediaStore.Images.Media.TITLE, uri.getLastPathSegment());
+			values.put(MediaStore.Images.Media.DISPLAY_NAME,
+					uri.getLastPathSegment());
+			values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+			values.put(MediaStore.Images.Media.DATA, uri.getPath());
+			values.put(MediaStore.Images.Media.DATE_TAKEN,
+					System.currentTimeMillis());
+
+			this.contentResolver.insert(
+					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 			camera.startPreview();
 
 		}
