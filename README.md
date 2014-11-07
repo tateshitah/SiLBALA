@@ -10,8 +10,10 @@ Usage
 Functions
 ------
 + simple sample AR application for android
-+ get x, y on the display of android device from azimuth and elevation information of target.
-+ get x, y on the display of android device from latitude, longitude, and altitude of target.
++ get x, y on the display screen of android device from azimuth and elevation information of target.
++ get x, y on the display screen of android device from latitude, longitude, and altitude of target.
++ draw azimuth and elevation lines
++ draw a kind of roof of latitude and longitude grid.
 
 Theory!?
 ------
@@ -25,16 +27,18 @@ In this library, two kinds of coordinates are used.
 * x axis is south direction,
 * y axis is down direction,
 * z axis is east direction,
-* angle increases for clockwise for all axis.
+* angle increases for clockwise for all axis
+* original point (0, 0, 0) means the position of android device user.
 
-(2) screen coordinate:
+(2) display screen coordinate:
 
  * right-handed coordinate system</li>
  * when the camera directs east without any lean and incline, azimuth, pitch, and roll will be 0 (zero).
  * x axis is direction of moving,
  * y axis is horizontal right direction,
  * z axis is vertical down direction,
- * angle increases for clockwise for all axis. The coordinate system should be adjusted for each devices.
+ * angle increases for clockwise for all axis. The coordinate system should be adjusted for each devices,
+ * original point (0, 0, 0) means the point of above left corner of the display screen of the android device.
 
 License
 ------

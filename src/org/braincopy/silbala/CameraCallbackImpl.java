@@ -27,31 +27,44 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+/**
+ * call back implementations for camera
+ * 
+ * @author Hiroaki Tateshita
+ * @version 0.2.0
+ * 
+ */
 public class CameraCallbackImpl implements SurfaceHolder.Callback,
 		ShutterCallback, PictureCallback {
-	private static final String TAG = "CameraViewHandler";
+	private static final String TAG = "Silbala";
 
-	private Camera mCam;
+	private Camera camera;
 	private List<Size> supportedPreviewSize;
 	private List<Size> supportedPictureSize;
-	private byte[] mFrame;
-	private Size mOptimalSize;
+	private byte[] mFrame;// what is this? necessary?
+	private Size optimalPreviewSize;
+	private Size optimalPictureSize;
 
-	private ARView overlayView;
+	private ARView overlayARView;
 
 	private ContentResolver contentResolver;
 
-	static private int MAX_WIDTH_SIZE = 2000;
+	/*
+	 * when calculate optimal size of taking picture, this value will be used as
+	 * maximum wide length of the picture. If you caught OUT OF MEMORY error in
+	 * your device, you should adjust this value.
+	 */
+	static final private int MAX_WIDTH_SIZE = 2000;
 
 	public CameraCallbackImpl() {
 		try {
-			mCam = Camera.open();
-			mCam.setDisplayOrientation(90);
+			camera = Camera.open();
+			camera.setDisplayOrientation(90);
 		} catch (Exception e) {
 			Log.d(TAG, "Error: failed to open Camera > " + e.getMessage());
 		}
 
-		mCam.setPreviewCallback(new PreviewCallback() {
+		camera.setPreviewCallback(new PreviewCallback() {
 
 			public void onPreviewFrame(byte[] data, Camera camera) {
 
@@ -64,33 +77,36 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 			}
 
 		});
-		Camera.Parameters params = mCam.getParameters();
+		Camera.Parameters params = camera.getParameters();
 		supportedPreviewSize = params.getSupportedPreviewSizes();
 		supportedPictureSize = params.getSupportedPictureSizes();
 
 	}
 
-	public void getFrame(byte[] frame) {
-		synchronized (mFrame) {
-			for (int i = 0; i < mFrame.length; i++) {
-				frame[i] = mFrame[i];
-			}
-		}
-
-	}
+	/**
+	 * is this method necessary?
+	 * 
+	 * @param frame
+	 */
+	/*
+	 * public void getFrame(byte[] frame) { synchronized (mFrame) { for (int i =
+	 * 0; i < mFrame.length; i++) { frame[i] = mFrame[i]; } }
+	 * 
+	 * }
+	 */
 
 	public int getWidth() {
-		return mOptimalSize.width;
+		return optimalPreviewSize.width;
 	}
 
 	public int getHeight() {
-		return mOptimalSize.height;
+		return optimalPreviewSize.height;
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
 		try {
-			mCam.setPreviewDisplay(holder);
-			mCam.startPreview();
+			camera.setPreviewDisplay(holder);
+			camera.startPreview();
 		} catch (IOException e) {
 			Log.d(TAG, "Error: setting Camera preview > " + e.getMessage());
 		}
@@ -100,28 +116,30 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 
-		mOptimalSize = getOptimalPreviewSize(supportedPreviewSize, width,
+		optimalPreviewSize = getOptimalPreviewSize(supportedPreviewSize, width,
 				height);
-		Size pictureSize = getOptimalPictureSize(supportedPictureSize);
+		optimalPictureSize = getOptimalPictureSize(supportedPictureSize);
 
 		if (holder.getSurface() == null) {
 			return;
 		}
 
 		try {
-			mCam.stopPreview();
+			camera.stopPreview();
 		} catch (Exception e) {
 			Log.d(TAG, "Error: failed to stop preview > " + e.getMessage());
 		}
 
 		try {
-			Camera.Parameters parameters = mCam.getParameters();
-			parameters.setPreviewSize(mOptimalSize.width, mOptimalSize.height);
-			parameters.setPictureSize(pictureSize.width, pictureSize.height);
+			Camera.Parameters parameters = camera.getParameters();
+			parameters.setPreviewSize(optimalPreviewSize.width,
+					optimalPreviewSize.height);
+			parameters.setPictureSize(optimalPictureSize.width,
+					optimalPictureSize.height);
 
-			mCam.setParameters(parameters);
-			mCam.setPreviewDisplay(holder);
-			mCam.startPreview();
+			camera.setParameters(parameters);
+			camera.setPreviewDisplay(holder);
+			camera.startPreview();
 		} catch (Exception e) {
 			Log.i(TAG,
 					"Error: failed to start camera preview > " + e.getMessage());
@@ -129,8 +147,8 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		mCam.stopPreview();
-		mCam.release();
+		camera.stopPreview();
+		camera.release();
 	}
 
 	private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
@@ -191,7 +209,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 	}
 
 	public void takePicture() {
-		mCam.takePicture(this, null, this);
+		camera.takePicture(this, null, this);
 
 	}
 
@@ -204,24 +222,23 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 	public void onPictureTaken(byte[] data, Camera camera) {
 		if (data != null) {
 
-			String strFolder;
-
-			strFolder = Environment.getExternalStorageDirectory()
-					+ "/DCIM/Camera/";
-
 			Bitmap cameraMap = BitmapFactory.decodeByteArray(data, 0,
 					data.length, null);
 
+			/*
+			 * rotate the picture acquired from camera.
+			 */
 			Matrix matrix = new Matrix();
 			matrix.setRotate(90);
 			cameraMap = Bitmap.createBitmap(cameraMap, 0, 0,
 					cameraMap.getWidth(), cameraMap.getHeight(), matrix, true);
 
-			Bitmap overlayMap = overlayView.getDrawingCache();
+			/*
+			 * capturing the picture of ARView.
+			 */
+			Bitmap overlayMap = overlayARView.getDrawingCache();
 			Bitmap offBitmap = Bitmap.createBitmap(cameraMap.getWidth(),
 					cameraMap.getHeight(), Bitmap.Config.ARGB_8888);
-			// offBitmap = Bitmap.createBitmap(offBitmap, 0, 0,
-			// offBitmap.getWidth(), offBitmap.getHeight(), matrix, true);
 			Log.i(TAG,
 					"data.length: " + data.length + ", cameraMap h:"
 							+ cameraMap.getHeight() + ", w:"
@@ -230,21 +247,17 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 							+ overlayMap.getWidth() + ", offBitmap h:"
 							+ offBitmap.getHeight() + ", w:"
 							+ offBitmap.getWidth());
-			Canvas offScreen = new Canvas(offBitmap);
-			offScreen
-					.drawBitmap(
-							cameraMap,
-							null,
-							new Rect(0, 0, cameraMap.getWidth(), cameraMap
-									.getHeight()), null);
-			offScreen
-					.drawBitmap(
-							overlayMap,
-							null,
-							new Rect(0, 0, cameraMap.getWidth(), cameraMap
-									.getHeight()), null);
 
-			Bitmap bitmap = offBitmap;
+			/*
+			 * Combining the picture of camera and the captured ARView picture
+			 */
+			Canvas canvasForCombine = new Canvas(offBitmap);
+			canvasForCombine.drawBitmap(cameraMap, null, new Rect(0, 0,
+					cameraMap.getWidth(), cameraMap.getHeight()), null);
+			canvasForCombine.drawBitmap(overlayMap, null, new Rect(0, 0,
+					cameraMap.getWidth(), cameraMap.getHeight()), null);
+
+			// storing the picture data on the android device.
 			FileOutputStream fos = null;
 
 			Date today = new Date();
@@ -252,11 +265,13 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 					"yyyy_MM_dd_hh_mm_ss_SSS", Locale.JAPAN);
 			String fileName = sdFormat.format(today) + ".jpg";
 
+			String strFolder = Environment.getExternalStorageDirectory()
+					+ "/DCIM/Camera/silbala/";
 			File file = new File(strFolder + fileName);
 			try {
 				if (file.createNewFile()) {
 					fos = new FileOutputStream(file);
-					bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+					offBitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
 					fos.close();
 				}
 			} catch (FileNotFoundException e) {
@@ -277,6 +292,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 
 			this.contentResolver.insert(
 					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
 			camera.startPreview();
 
 		}
@@ -284,7 +300,7 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 	}
 
 	public void setOverlayView(ARView arView) {
-		this.overlayView = arView;
+		this.overlayARView = arView;
 
 	}
 
