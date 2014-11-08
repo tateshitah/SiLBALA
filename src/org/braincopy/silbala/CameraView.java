@@ -10,9 +10,9 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
 /**
- * 
+ * @deprecated
  * @author Hiroaki Tateshita
- * @version 0.0.4
+ * @version 0.2.0
  * 
  */
 public class CameraView extends SurfaceView implements Callback {
@@ -44,8 +44,9 @@ public class CameraView extends SurfaceView implements Callback {
 			try {
 				camera.setPreviewDisplay(arg0);
 			} catch (IOException e) {
-				Log.d("hiro", "Error starting camera preview: " + e.getMessage());
-		           				e.printStackTrace();
+				Log.d("silbala",
+						"Error starting camera preview: " + e.getMessage());
+				e.printStackTrace();
 			}
 			camera.startPreview();
 		}
