@@ -11,12 +11,19 @@ Functions
 ------
 + simple sample AR application for android
 + get x, y on the display screen of android device from azimuth and elevation information of target.
+
 <img src="./assets/sample1.jpg" width="300px" />
+
 + get x, y on the display screen of android device from latitude, longitude, and altitude of target.
+
 <img src="./assets/sample2.jpg" width="300px" />
+
 + draw azimuth and elevation lines
+
 <img src="./assets/sample3.jpg" width="300px" />
+
 + draw a kind of roof of latitude and longitude grid.
+
 <img src="./assets/sample4.jpg" width="300px" />
 
 Theory!?
