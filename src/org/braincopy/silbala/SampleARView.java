@@ -62,7 +62,7 @@ public class SampleARView extends ARView {
 
 		// sample case 3: draw azimuth and elevation lines on display screen
 
-		// this.drawAzElLines(canvas, paint, 8);
+		this.drawAzElLines(canvas, paint, 8);
 
 		// sample case 4: draw roof based on latitude and longitude grid on
 		// display screen

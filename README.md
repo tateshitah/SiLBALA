@@ -11,9 +11,13 @@ Functions
 ------
 + simple sample AR application for android
 + get x, y on the display screen of android device from azimuth and elevation information of target.
+![SiLBALA](https://github.com/tateshitah/SiLBALA/blob/master/assets/sample1.jpg)
 + get x, y on the display screen of android device from latitude, longitude, and altitude of target.
+![SiLBALA](https://github.com/tateshitah/SiLBALA/blob/master/assets/sample2.jpg)
 + draw azimuth and elevation lines
+![SiLBALA](https://github.com/tateshitah/SiLBALA/blob/master/assets/sample3.jpg)
 + draw a kind of roof of latitude and longitude grid.
+![SiLBALA](https://github.com/tateshitah/SiLBALA/blob/master/assets/sample4.jpg)
 
 Theory!?
 ------

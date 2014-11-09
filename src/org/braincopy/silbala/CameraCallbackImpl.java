@@ -27,10 +27,12 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 /**
- * call back implementations for camera
+ * This class is callback implementations for camera. Please use SurfaceView
+ * class for camera and add this callback implementation object to Surface
+ * Holder of the view class.
  * 
  * @author Hiroaki Tateshita
- * @version 0.2.0
+ * @version 0.2.1
  * 
  */
 public class CameraCallbackImpl implements SurfaceHolder.Callback,
