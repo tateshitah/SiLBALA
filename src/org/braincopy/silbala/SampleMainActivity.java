@@ -41,6 +41,7 @@ import android.widget.ImageButton;
  * <li>angle increases for clockwise for all axis. The coordinate system should
  * be adjusted for each devices.</li>
  * </ol>
+ * Call me maybe, Royals, Grace Kelly
  * 
  * @author Hiroaki Tateshita
  * 
@@ -75,7 +76,7 @@ public class SampleMainActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				callbackImple.takePicture();
-				lat = (float) 20;
+
 			}
 		});
 
