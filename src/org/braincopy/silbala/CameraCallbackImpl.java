@@ -32,7 +32,7 @@ import android.view.SurfaceHolder;
  * Holder of the view class.
  * 
  * @author Hiroaki Tateshita
- * @version 0.2.1
+ * @version 0.2.2
  * 
  */
 public class CameraCallbackImpl implements SurfaceHolder.Callback,
@@ -222,19 +222,29 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 					"yyyy_MM_dd_hh_mm_ss_SSS", Locale.JAPAN);
 			String fileName = sdFormat.format(today) + ".jpg";
 
-			String strFolder = Environment.getExternalStorageDirectory()
-					+ "/DCIM/Camera/silbala/";
+			String strFolder = Environment
+					.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+					+ "/silbala/";
+			File folder = new File(strFolder);
 			File file = new File(strFolder + fileName);
 			try {
+
+				if (!folder.exists()) {
+					folder.mkdir();
+				}
 				if (file.createNewFile()) {
 					fos = new FileOutputStream(file);
 					offBitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+					// Log.i(TAG, "saved successfully: " + strFolder +
+					// fileName);
 					fos.close();
 				}
 			} catch (FileNotFoundException e) {
 				Log.e(TAG, e.getMessage());
 			} catch (IOException e) {
-				Log.e(TAG, e.getMessage());
+				Log.e(TAG,
+						"IOException: " + strFolder + fileName + ", "
+								+ e.getMessage());
 			}
 
 			Uri uri = Uri.fromFile(file);
