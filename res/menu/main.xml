@@ -1,11 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="org.braincopy.mobile.MainActivity" >
+    tools:context="org.braincopy.mobile.sample.MainActivity" >
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_main"
         android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_main"/>
+    <item
+        android:id="@+id/action_quit"
+        android:orderInCategory="200"
         android:showAsAction="never"
-        android:title="@string/action_settings"/>
-
+        android:title="@string/action_quit" android:checkable="false"/>
 </menu>

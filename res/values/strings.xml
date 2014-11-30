@@ -3,7 +3,11 @@
 
     <string name="app_name">SiLBALA</string>
     <string name="hello_world">Hello world3!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_main">Main</string>
+    <string name="action_quit">Quit</string>
     <string name="camera_icon">camera icon</string>
+    <string name="silbala">SiLBALA</string>
+    <string name="button_sample1">Sample 1</string>
+    <string name="button_sample2">Sample 2</string>
 
 </resources>

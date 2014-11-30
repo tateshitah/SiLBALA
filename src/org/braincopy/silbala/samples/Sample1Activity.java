@@ -1,11 +1,17 @@
-package org.braincopy.silbala;
+package org.braincopy.silbala.samples;
 
 import java.util.Date;
 import java.util.List;
 
+import org.braincopy.silbala.ARView;
+import org.braincopy.silbala.CameraCallbackImpl;
+import org.braincopy.silbala.R;
+import org.braincopy.silbala.SampleARView;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
@@ -46,8 +52,8 @@ import android.widget.ImageButton;
  * @author Hiroaki Tateshita
  * 
  */
-public class SampleMainActivity extends Activity implements
-		SensorEventListener, LocationListener {
+public class Sample1Activity extends Activity implements SensorEventListener,
+		LocationListener {
 	private SensorManager sensorManager;
 	private float[] accelerometerValues = new float[3];
 	private float[] magneticValues = new float[3];
@@ -62,7 +68,7 @@ public class SampleMainActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fragment_main);
+		setContentView(R.layout.fragment_sample1);
 
 		final CameraCallbackImpl callbackImple = new CameraCallbackImpl();
 		SurfaceView camView = (SurfaceView) findViewById(R.id.cam_view);
@@ -118,7 +124,10 @@ public class SampleMainActivity extends Activity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_main) {
+			Intent intent = new Intent(this.getApplicationContext(),
+					SampleMainActivity.class);
+			this.startActivity(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
