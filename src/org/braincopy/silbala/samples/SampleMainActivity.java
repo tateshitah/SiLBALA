@@ -15,9 +15,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 /**
- * Call me maybe, Royals, Grace Kelly
+ * BTW I like the songs, "Call me maybe", "Royals", and "Grace Kelly". the Movie
+ * "source code" is great. so impressive.
  * 
  * @author Hiroaki Tateshita
+ * @version 0.3.0
  * 
  */
 public class SampleMainActivity extends Activity {
@@ -57,8 +59,7 @@ public class SampleMainActivity extends Activity {
 		if (id == R.id.action_main) {
 			return true;
 		} else if (id == R.id.action_quit) {
-			this.finish();
-			System.exit(0);
+			this.moveTaskToBack(true);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -1,4 +1,7 @@
-package org.braincopy.silbala;
+package org.braincopy.silbala.samples;
+
+import org.braincopy.silbala.ARView;
+import org.braincopy.silbala.Point;
 
 import android.content.Context;
 import android.graphics.Canvas;

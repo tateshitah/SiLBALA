@@ -6,7 +6,6 @@ import java.util.List;
 import org.braincopy.silbala.ARView;
 import org.braincopy.silbala.CameraCallbackImpl;
 import org.braincopy.silbala.R;
-import org.braincopy.silbala.SampleARView;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -128,6 +127,9 @@ public class Sample1Activity extends Activity implements SensorEventListener,
 			Intent intent = new Intent(this.getApplicationContext(),
 					SampleMainActivity.class);
 			this.startActivity(intent);
+			return true;
+		} else if (id == R.id.action_quit) {
+			this.moveTaskToBack(true);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
