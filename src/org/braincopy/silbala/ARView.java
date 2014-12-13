@@ -196,8 +196,8 @@ public class ARView extends View {
 		 */
 		float deltaThetaLat, deltaThetaLon;
 
-		deltaThetaLat = (float) Math.toRadians(this.lat - lat_t);
-		deltaThetaLon = (float) Math.toRadians(this.lon - lon_t);
+		deltaThetaLat = (float) Math.toRadians(lat_t - this.lat);
+		deltaThetaLon = (float) Math.toRadians(lon_t - this.lon);
 
 		/*
 		 * difference between current position (lat, lon) and target position
@@ -216,7 +216,7 @@ public class ARView extends View {
 			 */
 			if (RADIUS_OF_EARTH / Math.cos(deltaTheta) < RADIUS_OF_EARTH
 					+ alt_t) {
-				float az = (float) Math.toDegrees(Math.atan2(
+				float az = (float) -Math.toDegrees(Math.atan2(
 						Math.tan(deltaThetaLat), Math.tan(deltaThetaLon)));
 				float el = (float) Math.toDegrees(Math.atan2(
 						(RADIUS_OF_EARTH + alt_t) * Math.cos(deltaTheta)

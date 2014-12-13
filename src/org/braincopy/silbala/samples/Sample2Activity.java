@@ -44,12 +44,11 @@ import android.widget.ImageButton;
  * <li>angle increases for clockwise for all axis. The coordinate system should
  * be adjusted for each devices.</li>
  * </ol>
- * Call me maybe, Royals, Grace Kelly
  * 
  * @author Hiroaki Tateshita
  * 
  */
-public class Sample1Activity extends Activity implements SensorEventListener,
+public class Sample2Activity extends Activity implements SensorEventListener,
 		LocationListener {
 	private SensorManager sensorManager;
 	private float[] accelerometerValues = new float[3];
@@ -57,7 +56,7 @@ public class Sample1Activity extends Activity implements SensorEventListener,
 	List<Sensor> listMag;
 	List<Sensor> listAcc;
 
-	private ARView arView;
+	private ARView arView2;
 	private LocationManager locationManager;
 	private float lat, lon;
 	private GeomagneticField geomagneticField;
@@ -65,7 +64,7 @@ public class Sample1Activity extends Activity implements SensorEventListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_sample1);
+		setContentView(R.layout.activity_sample2);
 
 		final CameraCallbackImpl callbackImple = new CameraCallbackImpl();
 		SurfaceView camView = (SurfaceView) findViewById(R.id.cam_view);
@@ -83,8 +82,8 @@ public class Sample1Activity extends Activity implements SensorEventListener,
 			}
 		});
 
-		arView = new SampleARView(this);
-		callbackImple.setOverlayView(arView);
+		arView2 = new Sample2ARView(this);
+		callbackImple.setOverlayView(arView2);
 		callbackImple.setContentResolver(this.getContentResolver());
 
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -92,7 +91,7 @@ public class Sample1Activity extends Activity implements SensorEventListener,
 		listAcc = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
 
 		// setContentView(new CameraView(this));
-		addContentView(arView, new LayoutParams(LayoutParams.MATCH_PARENT,
+		addContentView(arView2, new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.MATCH_PARENT));
 
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -100,14 +99,6 @@ public class Sample1Activity extends Activity implements SensorEventListener,
 		lat = (float) 35.660994;
 		lon = (float) 139.677619;
 
-		/*
-		 * ConnectivityManager cm = (ConnectivityManager)
-		 * getSystemService(Context.CONNECTIVITY_SERVICE); NetworkInfo
-		 * networkInfo = cm.getActiveNetworkInfo(); if (networkInfo != null &&
-		 * networkInfo.isConnected()) {
-		 * 
-		 * }
-		 */
 	}
 
 	@Override
@@ -217,7 +208,7 @@ public class Sample1Activity extends Activity implements SensorEventListener,
 			actual_orientation[0] = (float) (actual_orientation[0] + Math.PI * 0.5);
 			actual_orientation[2] = -1 * actual_orientation[2];
 
-			arView.drawScreen(actual_orientation, lat, lon);
+			arView2.drawScreen(actual_orientation, lat, lon);
 		}
 
 	}

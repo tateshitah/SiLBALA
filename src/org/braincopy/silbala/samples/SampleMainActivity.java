@@ -4,15 +4,12 @@ import org.braincopy.silbala.R;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 /**
  * BTW I like the songs, "Call me maybe", "Royals", and "Grace Kelly". the Movie
@@ -29,17 +26,15 @@ public class SampleMainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_main);
 
-		Button sample1Button = (Button) findViewById(R.id.button1);
-		sample1Button.setOnClickListener(new OnClickListener() {
+		setContentView(R.layout.activity_main);
 
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(),
-						Sample1Activity.class);
-				startActivity(intent);
+		if (savedInstanceState == null) {
+			// getFragmentManager().beginTransaction()
+			// .add(R.id.container, new PlaceholderFragment()).commit();
+			getFragmentManager().beginTransaction()
+					.add(R.id.container, new SampleMainFragment()).commit();
+		}
 
-			}
-		});
 	}
 
 	@Override
@@ -57,6 +52,8 @@ public class SampleMainActivity extends Activity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_main) {
+			getFragmentManager().beginTransaction()
+					.add(R.id.container, new SampleMainFragment()).commit();
 			return true;
 		} else if (id == R.id.action_quit) {
 			this.moveTaskToBack(true);

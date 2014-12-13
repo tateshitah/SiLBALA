@@ -61,18 +61,20 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 		// camera object will be opened.
 		try {
 			camera = Camera.open();
-			camera.setDisplayOrientation(90);
+			if (camera != null) {
+				camera.setDisplayOrientation(90);
+				Camera.Parameters params = camera.getParameters();
+				supportedPreviewSize = params.getSupportedPreviewSizes();
+				supportedPictureSize = params.getSupportedPictureSizes();
+				optimalPreviewSize = getOptimalPreviewSize(supportedPreviewSize);
+				optimalPictureSize = getOptimalPictureSize(supportedPictureSize);
+
+				// then released.
+				camera.release();
+			}
 		} catch (Exception e) {
 			Log.d(TAG, "Error: failed to open Camera > " + e.getMessage());
 		}
-		Camera.Parameters params = camera.getParameters();
-		supportedPreviewSize = params.getSupportedPreviewSizes();
-		supportedPictureSize = params.getSupportedPictureSizes();
-		optimalPreviewSize = getOptimalPreviewSize(supportedPreviewSize);
-		optimalPictureSize = getOptimalPictureSize(supportedPictureSize);
-
-		// then released.
-		camera.release();
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
@@ -119,8 +121,14 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		camera.stopPreview();
-		camera.release();
+		releaseCamera();
+	}
+
+	public void releaseCamera() {
+		if (camera != null) {
+			camera.stopPreview();
+			camera.release();
+		}
 	}
 
 	/**
@@ -274,6 +282,16 @@ public class CameraCallbackImpl implements SurfaceHolder.Callback,
 
 	public void setContentResolver(ContentResolver contentResolver_) {
 		this.contentResolver = contentResolver_;
+
+	}
+
+	public void setCamera(Camera camera_) {
+		camera = camera_;
+		if (camera != null) {
+			supportedPreviewSize = camera.getParameters()
+					.getSupportedPreviewSizes();
+			// if (mSurfaceCreated) requestLayout();
+		}
 
 	}
 }
