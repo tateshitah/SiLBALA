@@ -5,7 +5,7 @@ SiLBALA: Simple Location Based AR Library for Android
 Usage
 ------
 + copy the src folder of the package org.braincopy.silbala to your src folder.
-+ create your Activity and ARView class, refering SampleMainActivity and SampleARView.
++ create your Activity and ARView class, referring SampleMainActivity and SampleARView of samples package.
 
 Functions
 ------
@@ -28,6 +28,11 @@ Functions
 
 Theory!?
 ------
+
+###How to calculate the position on a display screen of a smart-phone
+
+Basically ARView class has a method to calculate the point of intersection between the plate of display screen ant the line from user to target object.
+
 ###Coordinates
 
 In this library, two kinds of coordinates are used.

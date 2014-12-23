@@ -40,6 +40,18 @@ public class SampleMainFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
+
+		Button sample3Button = (Button) rootView.findViewById(R.id.button3);
+		sample3Button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity()
+						.getApplicationContext(), Sample3Activity.class);
+				startActivity(intent);
+			}
+		});
+
 		return rootView;
 	}
 }
