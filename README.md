@@ -5,7 +5,7 @@ SiLBALA: Simple Location Based AR Library for Android
 Usage
 ------
 + copy the src folder of the package org.braincopy.silbala to your src folder.
-+ create your Activity and ARView class, referring SampleMainActivity and SampleARView of samples package.
++ create your Activity and ARView class, referring classes of SampleMainActivity and SampleARView of samples package. They should extend ARActivity class and ARView class.
 
 Functions
 ------

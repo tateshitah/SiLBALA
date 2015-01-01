@@ -4,38 +4,22 @@ import org.braincopy.silbala.ARActivity;
 import org.braincopy.silbala.R;
 
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 /**
- * The coordinate system of actual_orientation has been adjusted as follows:
- * <ol>
- * <li>right-handed coordinate system</li>
- * <li>when the camera directs east without any lean and incline, azimuth,
- * pitch, and roll will be 0 (zero).</li>
- * <li>x axis is direction of moving,</li>
- * <li>y axis is horizontal right direction,</li>
- * <li>z axis is vertical down direction,</li>
- * <li>angle increases for clockwise for all axis. The coordinate system should
- * be adjusted for each devices.</li>
- * </ol>
  * 
  * @author Hiroaki Tateshita
+ * @version 0.1.0
  * 
  */
-public class Sample3Activity extends ARActivity implements SensorEventListener,
-		LocationListener {
+public class Sample3Activity extends ARActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.setARView(new Sample2ARView(this));
+		this.setARView(new Sample3ARView(this));
 
 	}
 
@@ -58,15 +42,12 @@ public class Sample3Activity extends ARActivity implements SensorEventListener,
 					SampleMainActivity.class);
 			this.startActivity(intent);
 			return true;
+		} else if (id == R.id.action_quit) {
+			this.moveTaskToBack(true);
+			return true;
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -82,35 +63,6 @@ public class Sample3Activity extends ARActivity implements SensorEventListener,
 	@Override
 	public void onStop() {
 		super.onStop();
-	}
-
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		super.onSensorChanged(event);
-
-	}
-
-	@Override
-	public void onLocationChanged(Location arg0) {
-		super.onLocationChanged(arg0);
-	}
-
-	@Override
-	public void onProviderDisabled(String arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onProviderEnabled(String arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

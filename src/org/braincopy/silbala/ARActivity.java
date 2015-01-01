@@ -39,6 +39,7 @@ import android.widget.ImageButton;
  * Call me maybe, Royals, Grace Kelly
  * 
  * @author Hiroaki Tateshita
+ * @version 0.1.2
  * 
  */
 public class ARActivity extends Activity implements SensorEventListener,
@@ -53,13 +54,14 @@ public class ARActivity extends Activity implements SensorEventListener,
 	private LocationManager locationManager;
 	private float lat, lon;
 	private GeomagneticField geomagneticField;
+	CameraCallbackImpl callbackImple;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ar);
 
-		final CameraCallbackImpl callbackImple = new CameraCallbackImpl();
+		callbackImple = new CameraCallbackImpl();
 		SurfaceView camView = (SurfaceView) findViewById(R.id.cam_view);
 		SurfaceHolder holder = camView.getHolder();
 		// holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -75,17 +77,11 @@ public class ARActivity extends Activity implements SensorEventListener,
 			}
 		});
 
-		arView = new ARView(this);
-		callbackImple.setOverlayView(arView);
 		callbackImple.setContentResolver(this.getContentResolver());
 
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		listMag = sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD);
 		listAcc = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
-
-		// setContentView(new CameraView(this));
-		addContentView(arView, new LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.MATCH_PARENT));
 
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -96,24 +92,11 @@ public class ARActivity extends Activity implements SensorEventListener,
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_main) {
-			return true;
-		} else if (id == R.id.action_quit) {
-			this.moveTaskToBack(true);
-			return true;
-		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -216,6 +199,9 @@ public class ARActivity extends Activity implements SensorEventListener,
 
 	public void setARView(ARView arview_) {
 		this.arView = arview_;
+		callbackImple.setOverlayView(arView);
+		addContentView(arView, new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 
 	}
 
