@@ -59,7 +59,7 @@ In this library, two kinds of coordinates are used.
 License
 ------
 
-Copyright (c) 2013 braincopy.org
+Copyright (c) 2013-2014 Hiroaki Tateshita
 
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal
