@@ -39,7 +39,7 @@ import android.widget.ImageButton;
  * Call me maybe, Royals, Grace Kelly
  * 
  * @author Hiroaki Tateshita
- * @version 0.1.2
+ * @version 0.3.0
  * 
  */
 public class ARActivity extends Activity implements SensorEventListener,
@@ -52,9 +52,10 @@ public class ARActivity extends Activity implements SensorEventListener,
 
 	private ARView arView;
 	private LocationManager locationManager;
-	private float lat, lon;
+	public float lat, lon;
 	private GeomagneticField geomagneticField;
 	CameraCallbackImpl callbackImple;
+	private boolean isUsingGPS = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +130,7 @@ public class ARActivity extends Activity implements SensorEventListener,
 		super.onStop();
 		locationManager.removeUpdates(this);
 		sensorManager.unregisterListener(this);
+		this.isUsingGPS = false;
 
 	}
 
@@ -177,6 +179,13 @@ public class ARActivity extends Activity implements SensorEventListener,
 		geomagneticField = new GeomagneticField((float) arg0.getLatitude(),
 				(float) arg0.getLongitude(), (float) arg0.getAltitude(),
 				new Date().getTime());
+		if (!isUsingGPS) {
+			isUsingGPS = true;
+		}
+	}
+
+	public boolean isUsingGPS() {
+		return isUsingGPS;
 	}
 
 	@Override
