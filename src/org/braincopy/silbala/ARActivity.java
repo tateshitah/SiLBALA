@@ -39,7 +39,7 @@ import android.widget.ImageButton;
  * Call me maybe, Royals, Grace Kelly
  * 
  * @author Hiroaki Tateshita
- * @version 0.3.0
+ * @version 0.4.0
  * 
  */
 public class ARActivity extends Activity implements SensorEventListener,
@@ -206,12 +206,24 @@ public class ARActivity extends Activity implements SensorEventListener,
 
 	}
 
+	/**
+	 * 
+	 * @param arview_
+	 */
 	public void setARView(ARView arview_) {
 		this.arView = arview_;
 		callbackImple.setOverlayView(arView);
 		addContentView(arView, new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.MATCH_PARENT));
 
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ARView getARView() {
+		return this.arView;
 	}
 
 }

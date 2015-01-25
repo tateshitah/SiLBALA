@@ -39,5 +39,13 @@
         android:layout_gravity="center"
         android:text="@string/button_sample3"
         android:textColor="#ffffffff" />
+    <Button
+        android:id="@+id/button4"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/button_sample4"
+        android:textColor="#ffffffff" />
     
 </LinearLayout>

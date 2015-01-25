@@ -11,6 +11,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+/**
+ * 
+ * @author Hiroaki Tateshita
+ * @version 0.4.0
+ * 
+ */
 public class SampleMainFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,6 +58,16 @@ public class SampleMainFragment extends Fragment {
 			}
 		});
 
+		Button sample4Button = (Button) rootView.findViewById(R.id.button4);
+		sample4Button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity()
+						.getApplicationContext(), Sample4Activity.class);
+				startActivity(intent);
+			}
+		});
 		return rootView;
 	}
 }

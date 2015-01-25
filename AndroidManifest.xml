@@ -44,6 +44,10 @@
             android:name="org.braincopy.silbala.samples.Sample3Activity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="org.braincopy.silbala.samples.Sample4Activity"
+            android:label="@string/app_name" >
+        </activity>
         </application>
 
 </manifest>
