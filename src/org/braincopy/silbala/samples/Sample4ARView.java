@@ -12,11 +12,11 @@ import android.text.format.Time;
  * Sample class of extended ARView class.
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.0
+ * @version 0.4.1
  * 
  */
 public class Sample4ARView extends ARView {
-	ARObject arObj;
+	ARObject[] arObjs;
 	Time time;
 	Matrix matrix;
 
@@ -37,22 +37,24 @@ public class Sample4ARView extends ARView {
 		float aziTarget, eleTarget;
 		aziTarget = 315f + time.second;
 		eleTarget = -30f + time.second * 0.5f;
-		arObj.setPoint(this.convertAzElPoint(aziTarget, eleTarget));
-		point = arObj.getPoint();
-		if (point != null) {
-			matrix.postTranslate(point.x, point.y);
-			canvas.drawBitmap(arObj.getImage(), matrix, paint);
-			canvas.drawText("(" + aziTarget + ", " + eleTarget + ")", point.x,
-					point.y, paint);
-			matrix.postTranslate(-point.x, -point.y);
+		for (int i = 0; i < arObjs.length; i++) {
+			arObjs[i].setPoint(this.convertAzElPoint(aziTarget + 30 * i,
+					eleTarget + 5 * i));
+			point = arObjs[i].getPoint();
+			if (point != null) {
+				matrix.postTranslate(point.x, point.y);
+				canvas.drawBitmap(arObjs[i].getImage(), matrix, paint);
+				canvas.drawText("(" + aziTarget + ", " + eleTarget + ")",
+						point.x, point.y, paint);
+				matrix.postTranslate(-point.x, -point.y);
+			}
 		}
-
 		this.drawAzElLines(canvas, paint, 8);
 
 	}
 
-	public void setARObject(ARObject arObj_) {
-		this.arObj = arObj_;
+	public void setARObject(ARObject[] arObjs_) {
+		this.arObjs = arObjs_;
 
 	}
 }
