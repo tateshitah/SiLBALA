@@ -12,7 +12,7 @@ import android.text.format.Time;
  * Sample class of extended ARView class.
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.1
+ * @version 0.4.2
  * 
  */
 public class Sample4ARView extends ARView {
@@ -36,10 +36,10 @@ public class Sample4ARView extends ARView {
 		time.setToNow();
 		float aziTarget, eleTarget;
 		aziTarget = 315f + time.second;
-		eleTarget = -30f + time.second * 0.5f;
+		eleTarget = -90f + time.second * 0.5f;
 		for (int i = 0; i < arObjs.length; i++) {
-			arObjs[i].setPoint(this.convertAzElPoint(aziTarget + 30 * i,
-					eleTarget + 5 * i));
+			arObjs[i].setPoint(this.convertAzElPoint(aziTarget + 90 * i,
+					eleTarget + 1 * i));
 			point = arObjs[i].getPoint();
 			if (point != null) {
 				matrix.postTranslate(point.x, point.y);

@@ -1,19 +1,12 @@
 package org.braincopy.silbala;
 
 /**
- * Express point (x, y, z) based on real world Coordinates system
- * 
- * <ol>
- * <li>right-handed coordinate system</li>
- * <li>x axis is south direction,</li>
- * <li>y axis is down direction,</li>
- * <li>z axis is east direction,</li>
- * <li>angle increases for clockwise for all axis.</li>
- * <li>original point (0, 0, 0) means the position of android device user.</li>
- * </ol>
+ * Express point (x, y, z) be careful which coordinates system is used for this
+ * point object. rotate methods will be used when coordinates system is
+ * changing.
  * 
  * @author Hiroaki Tateshita
- * @version 0.2.0
+ * @version 0.4.0
  * 
  */
 public class Point {

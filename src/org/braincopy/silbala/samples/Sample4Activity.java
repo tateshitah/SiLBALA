@@ -21,27 +21,28 @@ import android.view.MotionEvent;
  * Sample of Touch Event of ARObject
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.1
+ * @version 0.4.2
  * 
  */
 public class Sample4Activity extends ARActivity {
 
 	private final float TOUCH_AREA_SIZE = 150;
-	private boolean touched;
+	private boolean[] touchedFlags;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		ARView arview = new Sample4ARView(this);
-		ARObject[] arObjs = new ARObject[4];
-		for (int i = 0; i < 4; i++) {
+		ARObject[] arObjs = new ARObject[8];
+		touchedFlags = new boolean[arObjs.length];
+		for (int i = 0; i < arObjs.length; i++) {
 			arObjs[i] = new ARObject();
 			arObjs[i].setImage(BitmapFactory.decodeResource(
 					this.getResources(), R.drawable.touchme));
+			touchedFlags[i] = false;
 		}
 		((Sample4ARView) arview).setARObject(arObjs);
 		this.setARView(arview);
-		this.touched = false;
 	}
 
 	@Override
@@ -91,13 +92,14 @@ public class Sample4Activity extends ARActivity {
 		float x, y;
 		x = event.getX();
 		y = event.getY();
-		for (int i = 0; i < 4; i++) {
-			Point point = ((Sample4ARView) this.getARView()).arObjs[i]
-					.getPoint();
+		ARObject[] arObjs_ = ((Sample4ARView) this.getARView()).arObjs;
+		for (int i = 0; i < arObjs_.length; i++) {
+			Point point = arObjs_[i].getPoint();
 			if (point != null) {
 				if (Math.abs(x - point.x) < TOUCH_AREA_SIZE
-						&& Math.abs(y - point.y) < TOUCH_AREA_SIZE && !touched) {
-					touched = true;
+						&& Math.abs(y - point.y) < TOUCH_AREA_SIZE
+						&& !touchedFlags[i]) {
+					touchedFlags[i] = true;
 
 					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 							this);
@@ -108,19 +110,9 @@ public class Sample4Activity extends ARActivity {
 									+ ", " + point.y + ") and you touched ("
 									+ x + ", " + y + ")");
 					alertDialogBuilder.setPositiveButton("OK",
-							new OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									touched = false;
-									dialog.cancel();
-								}
-							});
+							new ARObjOnClickListener(i));
 
 					Dialog dialog = alertDialogBuilder.create();
-					// dialog.setTitle("Sample 4 dialog");
-					// dialog.setContentView(R.layout.dialog);
 
 					dialog.show();
 					// popupWindow.showAsDropDown(this.getARView());
@@ -129,5 +121,21 @@ public class Sample4Activity extends ARActivity {
 
 		}
 		return super.onTouchEvent(event);
+	}
+
+	private class ARObjOnClickListener implements OnClickListener {
+		int index;
+
+		public ARObjOnClickListener(int index_) {
+			this.index = index_;
+		}
+
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			touchedFlags[index] = false;
+			dialog.cancel();
+
+		}
+
 	}
 }
