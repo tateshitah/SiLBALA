@@ -3,9 +3,10 @@ package org.braincopy.silbala;
 import android.graphics.Bitmap;
 
 /**
+ * class for AR Object
  * 
  * @author Hiroaki Tateshita
- * @version 0.1.0
+ * @version 0.4.0
  * 
  */
 public class ARObject {

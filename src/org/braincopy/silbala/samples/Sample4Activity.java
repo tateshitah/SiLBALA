@@ -18,12 +18,10 @@ import android.view.MotionEvent;
  * Sample of Touch Event of ARObject
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.2
+ * @version 0.4.4
  * 
  */
 public class Sample4Activity extends ARActivity {
-
-	private final float TOUCH_AREA_SIZE = 150;
 
 	// public boolean[] touchedFlags;
 

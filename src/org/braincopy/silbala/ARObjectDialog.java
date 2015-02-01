@@ -17,6 +17,7 @@ import android.widget.TextView;
  * 
  * Bundle args = new Bundle();<BR>
  * args.putString("message", "some messages ...");<BR>
+ * args.putInt("index", i);<BR>
  * dialog.setArguments(args);<BR>
  * 
  * @author Hiroaki Tateshita

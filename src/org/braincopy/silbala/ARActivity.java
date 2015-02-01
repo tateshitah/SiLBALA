@@ -39,7 +39,7 @@ import android.widget.ImageButton;
  * Call me maybe, Royals, Grace Kelly
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.0
+ * @version 0.4.4
  * 
  */
 public class ARActivity extends Activity implements SensorEventListener,
@@ -58,9 +58,12 @@ public class ARActivity extends Activity implements SensorEventListener,
 	private boolean isUsingGPS = false;
 
 	/**
-	 * flag to show the AR Object is touched or not.
+	 * flag to show the AR Object is touched or not. it should be in ARObject
+	 * class?
 	 */
 	public boolean[] touchedFlags;
+
+	public final float TOUCH_AREA_SIZE = 150;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
