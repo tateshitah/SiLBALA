@@ -147,7 +147,7 @@ public class Sample1Activity extends Activity implements SensorEventListener,
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
+			View rootView = inflater.inflate(R.layout.fragment_sample_main, container,
 					false);
 			return rootView;
 		}

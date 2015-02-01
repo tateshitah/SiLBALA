@@ -24,9 +24,9 @@ public class SampleMainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fragment_main);
+		setContentView(R.layout.fragment_sample_main);
 
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_sample_main);
 
 		if (savedInstanceState == null) {
 			// getFragmentManager().beginTransaction()
@@ -73,7 +73,7 @@ public class SampleMainActivity extends Activity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
+			View rootView = inflater.inflate(R.layout.fragment_sample_main, container,
 					false);
 			return rootView;
 		}

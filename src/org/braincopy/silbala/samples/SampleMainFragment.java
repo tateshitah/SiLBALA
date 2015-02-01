@@ -21,7 +21,7 @@ public class SampleMainFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final View rootView = inflater.inflate(R.layout.fragment_main,
+		final View rootView = inflater.inflate(R.layout.fragment_sample_main,
 				container, false);
 
 		Button sample1Button = (Button) rootView.findViewById(R.id.button1);
