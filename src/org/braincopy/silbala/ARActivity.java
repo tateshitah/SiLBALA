@@ -57,6 +57,11 @@ public class ARActivity extends Activity implements SensorEventListener,
 	CameraCallbackImpl callbackImple;
 	private boolean isUsingGPS = false;
 
+	/**
+	 * flag to show the AR Object is touched or not.
+	 */
+	public boolean[] touchedFlags;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

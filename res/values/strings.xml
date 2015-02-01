@@ -10,5 +10,6 @@
     <string name="button_sample2">Sample 2</string>
     <string name="button_sample3">Sample 3</string>
     <string name="button_sample4">Sample 4 (Touch Event)</string>
+    <string name="ok">OK</string>
     
 </resources>

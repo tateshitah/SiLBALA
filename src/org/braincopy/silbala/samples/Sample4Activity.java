@@ -2,14 +2,11 @@ package org.braincopy.silbala.samples;
 
 import org.braincopy.silbala.ARActivity;
 import org.braincopy.silbala.ARObject;
+import org.braincopy.silbala.ARObjectDialog;
 import org.braincopy.silbala.ARView;
 import org.braincopy.silbala.Point;
 import org.braincopy.silbala.R;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -27,7 +24,8 @@ import android.view.MotionEvent;
 public class Sample4Activity extends ARActivity {
 
 	private final float TOUCH_AREA_SIZE = 150;
-	private boolean[] touchedFlags;
+
+	// public boolean[] touchedFlags;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,22 +98,30 @@ public class Sample4Activity extends ARActivity {
 						&& Math.abs(y - point.y) < TOUCH_AREA_SIZE
 						&& !touchedFlags[i]) {
 					touchedFlags[i] = true;
-
-					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-							this);
-					alertDialogBuilder.setTitle("Sample 4 AlertDialog");
-					alertDialogBuilder
-							.setMessage("This is sample 4 alert dialog! "
-									+ "ARObjs[" + i + "] was at (" + point.x
-									+ ", " + point.y + ") and you touched ("
-									+ x + ", " + y + ")");
-					alertDialogBuilder.setPositiveButton("OK",
-							new ARObjOnClickListener(i));
-
-					Dialog dialog = alertDialogBuilder.create();
-
-					dialog.show();
-					// popupWindow.showAsDropDown(this.getARView());
+					/*
+					 * AlertDialog.Builder alertDialogBuilder = new
+					 * AlertDialog.Builder( this);
+					 * alertDialogBuilder.setTitle("Sample 4 AlertDialog");
+					 */
+					String message = "This is sample 4 alert dialog! "
+							+ "ARObjs[" + i + "] was at (" + point.x + ", "
+							+ point.y + ") and you touched (" + x + ", " + y
+							+ ")";
+					/*
+					 * alertDialogBuilder.setMessage(message);
+					 * alertDialogBuilder.setPositiveButton("OK", new
+					 * ARObjOnClickListener(i));
+					 * 
+					 * Dialog dialog = alertDialogBuilder.create();
+					 * 
+					 * dialog.show(); //
+					 * popupWindow.showAsDropDown(this.getARView());
+					 */ARObjectDialog dialog2 = new ARObjectDialog();
+					Bundle args = new Bundle();
+					args.putString("message", message);
+					args.putInt("index", i + 1);
+					dialog2.setArguments(args);
+					dialog2.show(getFragmentManager(), "tag?");
 				}
 			}
 
@@ -123,19 +129,17 @@ public class Sample4Activity extends ARActivity {
 		return super.onTouchEvent(event);
 	}
 
-	private class ARObjOnClickListener implements OnClickListener {
-		int index;
-
-		public ARObjOnClickListener(int index_) {
-			this.index = index_;
-		}
-
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			touchedFlags[index] = false;
-			dialog.cancel();
-
-		}
-
-	}
+	/*
+	 * private class ARObjOnClickListener implements OnClickListener { int
+	 * index;
+	 * 
+	 * public ARObjOnClickListener(int index_) { this.index = index_; }
+	 * 
+	 * @Override public void onClick(DialogInterface dialog, int which) {
+	 * touchedFlags[index] = false; dialog.cancel();
+	 * 
+	 * }
+	 * 
+	 * }
+	 */
 }
