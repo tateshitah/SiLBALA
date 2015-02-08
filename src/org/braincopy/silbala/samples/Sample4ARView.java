@@ -14,7 +14,7 @@ import android.text.format.Time;
  * "touch event"!
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.6
+ * @version 0.4.7
  * 
  */
 public class Sample4ARView extends ARView {
@@ -22,12 +22,13 @@ public class Sample4ARView extends ARView {
 	Time time;
 	Matrix matrix;
 	Point touchedPoint;
+	float scale = 0f;;
 
 	public Sample4ARView(Context context) {
 		super(context);
 		time = new Time("Asia/Tokyo");
 		matrix = new Matrix();
-		float scale = 2.0f;
+		scale = 2.0f;
 		matrix.postScale(scale, scale);
 	}
 
@@ -37,19 +38,22 @@ public class Sample4ARView extends ARView {
 		this.setStatus("sample4");
 
 		time.setToNow();
-		float aziTarget, eleTarget;
+		float aziTarget, eleTarget, dx, dy;
 		aziTarget = 315f + time.second;
 		eleTarget = -90f + time.second * 0.5f;
 		for (int i = 0; i < arObjs.length; i++) {
-			arObjs[i].setPoint(this.convertAzElPoint(aziTarget + 90 * i,
-					eleTarget + 1 * i));
-			point = arObjs[i].getPoint();
+			point = this
+					.convertAzElPoint(aziTarget + 90 * i, eleTarget + 1 * i);
+			dx = arObjs[i].getImage().getWidth() / 2 * scale;
+			dy = arObjs[i].getImage().getHeight() / 2 * scale;
 			if (point != null) {
-				matrix.postTranslate(point.x, point.y);
+				arObjs[i].setPoint(point);
+				matrix.postTranslate(point.x - dx, point.y - dy);
 				canvas.drawBitmap(arObjs[i].getImage(), matrix, paint);
 				canvas.drawText("(" + aziTarget + ", " + eleTarget + ")",
 						point.x, point.y, paint);
-				matrix.postTranslate(-point.x, -point.y);
+				matrix.postTranslate(-point.x + dx, -point.y + dy);
+				canvas.drawCircle(point.x, point.y, 150f, paint);
 			}
 		}
 		if (this.touchedPoint != null) {
