@@ -18,10 +18,11 @@ import android.view.MotionEvent;
  * Sample of Touch Event of ARObject
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.4
+ * @version 0.4.5
  * 
  */
 public class Sample4Activity extends ARActivity {
+	float gapBtwnWindowAndView;
 
 	// public boolean[] touchedFlags;
 
@@ -86,8 +87,12 @@ public class Sample4Activity extends ARActivity {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		float x, y;
+		if (this.gapBtwnWindowAndView == 0) {
+			gapBtwnWindowAndView = getWindow().getDecorView().getHeight()
+					- getARView().getHeight();
+		}
 		x = event.getX();
-		y = event.getY();
+		y = event.getY() - gapBtwnWindowAndView;
 		ARObject[] arObjs_ = ((Sample4ARView) this.getARView()).arObjs;
 		for (int i = 0; i < arObjs_.length; i++) {
 			Point point = arObjs_[i].getPoint();
@@ -96,30 +101,19 @@ public class Sample4Activity extends ARActivity {
 						&& Math.abs(y - point.y) < TOUCH_AREA_SIZE
 						&& !touchedFlags[i]) {
 					touchedFlags[i] = true;
-					/*
-					 * AlertDialog.Builder alertDialogBuilder = new
-					 * AlertDialog.Builder( this);
-					 * alertDialogBuilder.setTitle("Sample 4 AlertDialog");
-					 */
-					String message = "This is sample 4 alert dialog! "
-							+ "ARObjs[" + i + "] was at (" + point.x + ", "
-							+ point.y + ") and you touched (" + x + ", " + y
-							+ ")";
-					/*
-					 * alertDialogBuilder.setMessage(message);
-					 * alertDialogBuilder.setPositiveButton("OK", new
-					 * ARObjOnClickListener(i));
-					 * 
-					 * Dialog dialog = alertDialogBuilder.create();
-					 * 
-					 * dialog.show(); //
-					 * popupWindow.showAsDropDown(this.getARView());
-					 */ARObjectDialog dialog2 = new ARObjectDialog();
+
+					String message = "This is sample 4 dialog! " + "ARObjs["
+							+ i + "] was at (" + point.x + ", " + point.y
+							+ ") and you touched (" + x + ", " + y + ")";
+
+					((Sample4ARView) this.getARView())
+							.setTouchedPoint(new Point(x, y, 0f));
+					ARObjectDialog dialog = new ARObjectDialog();
 					Bundle args = new Bundle();
 					args.putString("message", message);
 					args.putInt("index", i + 1);
-					dialog2.setArguments(args);
-					dialog2.show(getFragmentManager(), "tag?");
+					dialog.setArguments(args);
+					dialog.show(getFragmentManager(), "tag?");
 				}
 			}
 

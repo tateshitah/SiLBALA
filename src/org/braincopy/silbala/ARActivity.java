@@ -39,7 +39,7 @@ import android.widget.ImageButton;
  * Call me maybe, Royals, Grace Kelly
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.4
+ * @version 0.4.5
  * 
  */
 public class ARActivity extends Activity implements SensorEventListener,
