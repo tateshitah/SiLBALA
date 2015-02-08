@@ -21,7 +21,7 @@ import android.widget.TextView;
  * dialog.setArguments(args);<BR>
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.2
+ * @version 0.4.6
  * 
  */
 public class ARObjectDialog extends DialogFragment {
@@ -37,7 +37,7 @@ public class ARObjectDialog extends DialogFragment {
 		dialog.setContentView(R.layout.ar_obj_dialog);
 		dialog.getWindow().setBackgroundDrawable(
 				new ColorDrawable(Color.TRANSPARENT));
-		dialog.setTitle("default title");
+		// dialog.setTitle("default title");
 		final int index = getArguments().getInt("index");
 		// if "index" is not set, getInt() method returns 0,
 		// so when index set, add 1
@@ -46,7 +46,10 @@ public class ARObjectDialog extends DialogFragment {
 					.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							((ARActivity) getActivity()).touchedFlags[index - 1] = false;
+							// ((ARActivity) getActivity()).touchedFlags[index -
+							// 1] = false;
+							((ARActivity) getActivity()).getARView()
+									.getArObjs()[index - 1].setTouched(false);
 							dismiss();
 						}
 					});

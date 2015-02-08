@@ -10,14 +10,15 @@ import android.graphics.Matrix;
 import android.text.format.Time;
 
 /**
- * Sample class of extended ARView class.
+ * Sample class of extended ARView class. The point of this sample is
+ * "touch event"!
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.3
+ * @version 0.4.6
  * 
  */
 public class Sample4ARView extends ARView {
-	ARObject[] arObjs;
+	// ARObject[] arObjs;
 	Time time;
 	Matrix matrix;
 	Point touchedPoint;

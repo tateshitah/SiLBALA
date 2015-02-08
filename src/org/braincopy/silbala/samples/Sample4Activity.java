@@ -18,7 +18,7 @@ import android.view.MotionEvent;
  * Sample of Touch Event of ARObject
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.5
+ * @version 0.4.6
  * 
  */
 public class Sample4Activity extends ARActivity {
@@ -31,12 +31,13 @@ public class Sample4Activity extends ARActivity {
 		super.onCreate(savedInstanceState);
 		ARView arview = new Sample4ARView(this);
 		ARObject[] arObjs = new ARObject[8];
-		touchedFlags = new boolean[arObjs.length];
+		// touchedFlags = new boolean[arObjs.length];
 		for (int i = 0; i < arObjs.length; i++) {
 			arObjs[i] = new ARObject();
 			arObjs[i].setImage(BitmapFactory.decodeResource(
 					this.getResources(), R.drawable.touchme));
-			touchedFlags[i] = false;
+			// touchedFlags[i] = false;
+			arObjs[i].setTouched(false);
 		}
 		((Sample4ARView) arview).setARObject(arObjs);
 		this.setARView(arview);
@@ -93,14 +94,16 @@ public class Sample4Activity extends ARActivity {
 		}
 		x = event.getX();
 		y = event.getY() - gapBtwnWindowAndView;
-		ARObject[] arObjs_ = ((Sample4ARView) this.getARView()).arObjs;
+		ARObject[] arObjs_ = this.getARView().getArObjs();
 		for (int i = 0; i < arObjs_.length; i++) {
 			Point point = arObjs_[i].getPoint();
 			if (point != null) {
 				if (Math.abs(x - point.x) < TOUCH_AREA_SIZE
 						&& Math.abs(y - point.y) < TOUCH_AREA_SIZE
-						&& !touchedFlags[i]) {
-					touchedFlags[i] = true;
+						// && !touchedFlags[i]) {
+						&& !arObjs_[i].isTouched()) {
+					// touchedFlags[i] = true;
+					arObjs_[i].setTouched(true);
 
 					String message = "This is sample 4 dialog! " + "ARObjs["
 							+ i + "] was at (" + point.x + ", " + point.y
@@ -121,17 +124,4 @@ public class Sample4Activity extends ARActivity {
 		return super.onTouchEvent(event);
 	}
 
-	/*
-	 * private class ARObjOnClickListener implements OnClickListener { int
-	 * index;
-	 * 
-	 * public ARObjOnClickListener(int index_) { this.index = index_; }
-	 * 
-	 * @Override public void onClick(DialogInterface dialog, int which) {
-	 * touchedFlags[index] = false; dialog.cancel();
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
 }
