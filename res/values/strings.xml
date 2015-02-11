@@ -6,8 +6,8 @@
     <string name="action_quit">Quit</string>
     <string name="camera_icon">camera icon</string>
     <string name="silbala">SiLBALA</string>
-    <string name="button_sample1">Sample 1</string>
-    <string name="button_sample2">Sample 2</string>
+    <string name="button_sample1">Sample 1 (azimuth elevation lines)</string>
+    <string name="button_sample2">Sample 2 (Grid Roof of lat and lon)</string>
     <string name="button_sample3">Sample 3 (Top of Mountains)</string>
     <string name="button_sample4">Sample 4 (Touch Event)</string>
     <string name="ok">OK</string>
