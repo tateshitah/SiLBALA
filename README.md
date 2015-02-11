@@ -4,12 +4,13 @@ SiLBALA: Simple Location Based AR Library for Android
 
 Usage
 ------
-+ copy the src folder of the package org.braincopy.silbala to your src folder.
-+ create your Activity and ARView class, referring classes of SampleMainActivity and SampleARView of samples package. They should extend ARActivity class and ARView class.
++ copy the src folder of the package org.braincopy.silbala to your src folder and necessary layout xml files.
++ create your Activity and ARView class, referring classes of SampleMainActivity and SampleARView of samples package. They should extend ARActivity class, ARView class, and ARObject class.
 
 Functions
 ------
-+ simple sample AR application for android
++ simple samples of AR application for android in sample folder (org.braincopy.silbala.samples)
++ take pictures of display
 + get x, y on the display screen of android device from azimuth and elevation information of target.
 
 <img src="./assets/sample1.jpg" width="300px" />
@@ -18,13 +19,18 @@ Functions
 
 <img src="./assets/sample2.jpg" width="300px" />
 
-+ draw azimuth and elevation lines
++ draw azimuth and elevation lines (refer Sample1Activity.java)
 
 <img src="./assets/sample3.jpg" width="300px" />
 
-+ draw a kind of roof of latitude and longitude grid.
++ draw a kind of roof of latitude and longitude grid (refer Sample2Activity.java)
 
 <img src="./assets/sample4.jpg" width="300px" />
+
++ deal the touch events of AR Objects (refer Sample4Activity.java)
+
+<img src="./assets/sample5-1.jpg" width="300px" />
+<img src="./assets/sample5-2.jpg" width="300px" />
 
 Theory!?
 ------
