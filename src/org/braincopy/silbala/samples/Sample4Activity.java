@@ -18,7 +18,7 @@ import android.view.MotionEvent;
  * Sample of Touch Event of ARObject
  * 
  * @author Hiroaki Tateshita
- * @version 0.4.6
+ * @version 0.4.7
  * 
  */
 public class Sample4Activity extends ARActivity {
@@ -41,6 +41,7 @@ public class Sample4Activity extends ARActivity {
 		}
 		((Sample4ARView) arview).setARObject(arObjs);
 		this.setARView(arview);
+		this.setUsingGPS(true);
 	}
 
 	@Override

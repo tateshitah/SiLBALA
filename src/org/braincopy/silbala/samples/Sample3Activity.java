@@ -11,7 +11,7 @@ import android.view.MenuItem;
 /**
  * 
  * @author Hiroaki Tateshita
- * @version 0.1.0
+ * @version 0.4.7
  * 
  */
 public class Sample3Activity extends ARActivity {
@@ -19,6 +19,7 @@ public class Sample3Activity extends ARActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.setUsingGPS(true);
 		this.setARView(new Sample3ARView(this));
 
 	}
