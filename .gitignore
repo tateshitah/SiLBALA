@@ -1,2 +1,8 @@
 .settings
 bin/
+local.properties
+*.iml
+.gradle
+workspace.xml
+build
+.idea
